@@ -5,6 +5,7 @@ LINE APIを利用して、AWS API GateWay~Lambda〜S3への構築を行う際に
 
 ## 構築前の状態（前提条件）
 Macを利用しているので標準でPythonがインストールされていますが、バージョンが古いので、こちらを「3系」を利用できる様にしていきます。
+
 ```
 *****@PC  % python --version
 Python 2.7.16
@@ -13,53 +14,67 @@ Python 2.7.16
 先に記述するとOSを「**Catalina**」→「**BigSur**」にしたため、Pythonの最新バージョンをGetすることが出来ませんでした。
 
 ちなみに「**Homebrew**」はRubyを学習したのでインストールが済んでいる状態です。
+
 ```
 *****@PC  % brew -v
 Homebrew 3.1.7
 Homebrew/homebrew-core (git revision 0e20a3258c; last commit 2021-05-16)
 ```
+
 「**Pyenv(パイエンブ)**」ツールを利用してPythonをインストールする方法を考えて、状態を確認してみます。
 下記のコマンドの通り、インストールされていないことが確認できます。
+
 ```
 *****@PC  % pyenv -v
 zsh: command not found: pyenv
 ```
+
 ___
 ## Pyenv（パイエンブ）インストール
+
 ```
 *****@PC  % brew install pyenv
 Updating Homebrew...
 --- 省略 ---
 ```
+
 ちゃんとインストールされているか確認してみます
+
 ```
 *****@PC  % pyenv -v
 pyenv 1.2.27
 ```
+
 ---
 ## パスを通す
+
 ```
 *****@PC  % echo $SHELL
 /bin/zsh
 ```
+
 ```
 *****@PC  % echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
 *****@PC  % echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
 *****@PC  % echo 'eval "$(pyenv init -)"' >> ~/.zshrc
 *****@PC  % source ~/.zshrc
 ```
+
 ---
 ## Pythonのインストール
 インストールしたPyenvを用いてPythonをインストールしていきます
+
 ```
 *****@PC  % pyenv install --list
 Available versions:
   2.1.3
 --- 略 --- 
 ```
+
 ---
 ## ※ここで躓く！！
 なんか「**xcrun**」となるもののパスが見当たらないみたい。
+
 ```
 *****@PC  % pyenv install 3.9.0
 python-build: use openssl from homebrew
@@ -71,19 +86,23 @@ configure: error: C compiler cannot create executables
 See `config.log' for more details
 xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
 ```
+
 調べてみると、Xcodeの開発者ツールが見当たらなくなってしまっていることが原因とのことで、Mac OSをアップデートした時にあるあるネタということが分かる。
 
 ---
 
 ## 対処方法
 下記のコマンドで「**xcode**」をインストールし直す
+
 ```
 *****@PC % xcode-select --install
 xcode-select: note: install requested for command line developer tools
 ```
+
 ---
 ## ※再び躓く！！
 Buildが出来ないと出てしまっている。とりあえずググる。
+
 ```
 *****@PC % pyenv install 3.9.0
 python-build: use openssl from homebrew
@@ -103,6 +122,7 @@ make: *** [Modules/posixmodule.o] Error 1
 make: *** Waiting for unfinished jobs....
 1 warning generated.
 ```
+
 ---
 ## 対処方法
 1.**update**でHomebrewの各パッケージの情報をアップデート  
@@ -110,6 +130,7 @@ make: *** Waiting for unfinished jobs....
 3.Zlibを利用するためインストールする  
 4.pythonのバージョンを切り替える  
 5.バージョン3.9.0をインストール
+
 ```
 *****@PC ~ % brew update
 *****@PC ~ % brew upgrade
@@ -117,17 +138,21 @@ make: *** Waiting for unfinished jobs....
 *****@PC ~ % eval "$(pyenv init -)"
 *****@PC ~ % CPPFLAGS="-I$(brew --prefix openssl)/include -I$(brew --prefix bzip2)/include -I$(brew --prefix readline)/include -I$(brew --prefix zlib)/include" LDFLAGS="-L$(brew --prefix openssl)/lib -L$(brew --prefix readline)/lib -L$(brew --prefix zlib)/lib -L$(brew --prefix bzip2)/lib" pyenv install 3.9.0
 ```
+
 ---
 ## 結果
+
 ```
 *****@PC ~ % pyenv versions
 * system (set by /Users/*****/.pyenv/version)
   3.9.0
 *****@PC ~ % pyenv global 3.9.0
 ```
+
 ---
 ## バージョンを確認する
 zshにパスを通して環境構築終了
+
 ```
 *****@PC ~ % python --version
 Python 2.7.16
@@ -136,5 +161,6 @@ Python 2.7.16
 *****@PC ~ % python --version
 Python 3.9.0
 ```
+
 ---
 ## さっそく次回からLambdaを利用して構築をしていきたいと思います。
