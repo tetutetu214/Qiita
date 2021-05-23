@@ -66,7 +66,7 @@ python-build: use openssl from homebrew
 python-build: use readline from homebrew
 --- 中略 ---
 checking whether the C compiler works... no
-configure: error: in `/var/folders/3z/nrjs__rs3gl5l6_3qtkyt8240000gn/T/python-build.20210522115358.28038/Python-3.6.5':
+configure: error: in `/var/folders/3z/nrjs__rs3gl5l6_3qtkyt8240000gn/T/python-build.20210522115358.28038/Python-3.9.0':
 configure: error: C compiler cannot create executables
 See `config.log' for more details
 xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
